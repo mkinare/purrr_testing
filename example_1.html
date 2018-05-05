@@ -510,7 +510,7 @@ knitr<span class="op">::</span><span class="kw">kable</span>(dat2DFr[<span class
 </tbody>
 </table>
 <hr />
-<p>To accomplish the stocks vector we created earlier along with the <strong>map2_df</strong> function and <strong>update_list</strong></p>
+<p>To accomplish adding a new column with the information about which companies stock it is, we use the stocks vector we created earlier along with the <strong>map2_df</strong> function and <strong>update_list</strong></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat2DFm2df &lt;-<span class="st"> </span><span class="kw">map2_df</span>(dat2, stocks, <span class="op">~</span><span class="kw">update_list</span>(.x, <span class="dt">Stock =</span> .y))
 knitr<span class="op">::</span><span class="kw">kable</span>(dat2DFm2df[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,])</code></pre></div>
 <table>
