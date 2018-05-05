@@ -3,22 +3,15 @@ title: "purrr example_1"
 author: "Kinare, Mayuresh"
 date: "5/5/2018"
 output:
-  pdf_document: default
   html_document: default
 ---
 
 ```{r setup, include=FALSE, echo=TRUE}
 #sourcing dependencies
 source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_library.R')
-source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_download_unzip.R')
+#source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_download_unzip.R')
 
 ```
-
-```{r cache=FALSE, echo=FALSE}
-knitr::read_chunk('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_library.R')
-knitr::read_chunk('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_download_unzip.R')
-```
-
 ## R Markdown
 
 This is an example from http://data.library.virginia.edu/getting-started-with-the-purrr-package-in-r/
