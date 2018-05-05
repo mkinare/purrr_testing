@@ -373,13 +373,13 @@ source('/mnt/d/gitRepoCheckout/purrr_testing/function_list2dt.R')
 # Generating the lists for consumption
 print("Start of creating listA")
 start<- Sys.time()
-listA <- random_string(18000)
+listA <- random_string(1000)
 print(Sys.time()-start)
 print("End of creation of listA")
 
 print("Start of creating listB")
 start<- Sys.time()
-listB <- random_string(1)
+listB <- random_string(1000)
 print(Sys.time()-start)
 print("End of creation of listB")
 
@@ -438,13 +438,14 @@ print("End of purrr")
 
 # Using map from purrr with future - furrr!
 
-plan(multiprocess)
+plan(multisession)
 
-print("Start of purrr with furrr")
+print("Start of purrr with furrr implicit")
 start<- Sys.time()
 
-listC_dt_furrr<- map(listB,~list2dt(list1 = listA, object1 =.x)) %>% rbindlist
+#listC_dt_furrr<- map(listB,~list2dt(list1 = listA, object1 =.x)) %>% rbindlist
+listC_dt_furrr_imp %<-% map(listB,~list2dt(list1 = listA, object1 =.x)) 
+listC_dt_furrr_imp_op %<-% rbindlist(listC_dt_furrr_imp)
 
 print(Sys.time()-start)
-print("End of furrr")
-
+print("End of furrr implicit")
