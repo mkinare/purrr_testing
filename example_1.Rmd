@@ -23,7 +23,7 @@ This is an example from http://data.library.virginia.edu/getting-started-with-th
 *** 
 
 Obtaining a list of names of the files we want to load
-```{r, echo=TRUE}
+```{r}
 
 # get all files ending in csv
 files <- list.files(pattern = "csv$") 
@@ -32,7 +32,7 @@ files <- list.files(pattern = "csv$")
 *** 
 
 Loading csv files using lapply 
-```{r, echo=TRUE}
+```{r}
 # read in data normally
 dat <- lapply(files, read.csv)
 names(dat) <- gsub("\\.csv", "", files) # remove file extension
@@ -41,7 +41,7 @@ names(dat) <- gsub("\\.csv", "", files) # remove file extension
 *** 
 
 Loading csv files using purrr 
-```{r, echo=TRUE}
+```{r}
 
 # read in data using purrr
 dat2 <- map(files, read.csv)
@@ -51,7 +51,7 @@ names(dat2) <- gsub("\\.csv", "", files)
 *** 
 
 Computation using lapply
-```{r, echo=TRUE}
+```{r}
 #want to find the mean Open price for each stock. Here is a base R way using lapply and an anonymous function:
   
 lapply(dat, function(x)mean(x$Open))
@@ -60,7 +60,7 @@ lapply(dat, function(x)mean(x$Open))
 *** 
 
 Computation using purrr
-```{r, echo=TRUE}
+```{r}
 #want to find the mean Open price for each stock.
   
 map(dat, function(x)mean(x$Open))
@@ -69,7 +69,7 @@ map(dat, function(x)mean(x$Open))
 *** 
 
 purrr **map** allows us to bypass the function function. Using a tilda (~) in place of function and a dot (.) in place of x, we can do this:
-```{r, echo=TRUE}
+```{r}
 #Note that we are not using function as well as not passing x
 map(dat, ~mean(.$Open))
 
@@ -77,14 +77,14 @@ map(dat, ~mean(.$Open))
 *** 
 
 Multiple types of map allow us to determine the structure of the return
-```{r, echo=TRUE}
+```{r}
 map_dbl(dat, ~mean(.$Open))
 
 ```
 *** 
 
 We want to extract each stock’s Open price data. In other words, we want to go into each data frame in our list and pull out the Open column. We can do that with lapply as follows:
-```{r, echo=TRUE}
+```{r}
 lapply(dat, function(x)x$Open)
 
 
@@ -92,7 +92,7 @@ lapply(dat, function(x)x$Open)
 *** 
 
 Using purrr **map**
-```{r, echo=TRUE}
+```{r}
 map(dat, "Open")
 
 ```
@@ -108,7 +108,7 @@ We will do this with the base R function mapply.
 **NOTE:** The “m” in mapply means “multiple arguments”. In this case we have two arguments: the Closing price and the stock name. Notice that mapply requires the function come first and then the arguments.
 
 
-```{r, echo=TRUE, fig.asp=0.4}
+```{r, fig.asp=0.4}
 
 #creating a list to use
 stocks <- sub("\\.csv","", files)
@@ -120,7 +120,7 @@ mapply(function(x,y)plot(x$Close, type = "l", main = y), x = dat, y = stocks)
 *** 
 
 The purrr equivalent is map2. 
-```{r, echo=TRUE, fig.asp=0.4}
+```{r, fig.asp=0.4}
 par(mfrow=c(1,3))
 map2(dat, stocks, ~plot(.x$Close, type="l", main = .y))
 
@@ -128,11 +128,58 @@ map2(dat, stocks, ~plot(.x$Close, type="l", main = .y))
 *** 
 
 If we want to not have the NULL returns from plot we can use **walk2**
-```{r, echo=TRUE, fig.asp=0.4}
+```{r, fig.asp=0.4}
 par(mfrow=c(1,3))
 walk2(dat, stocks, ~plot(.x$Close, type="l", main = .y))
 
 ```
+***
+
+We want to now combine the 3 data sets into a single one and keep the meta data about which table it came from (which stock it was)
+Using regular R,
+```{r, results='asis'}
+# we use do.call with rbind
+datDF <- do.call(rbind, dat)
+# add stock names to data frame
+datDF$Stock <- gsub("\\.[0-9]*", "", rownames(datDF)) 
+# remove period and numbers
+#first 5 rows 
+knitr::kable(datDF[1:5,])
+
+```
+
+*** 
+
+Using purrr, if use **map_df** we lose the information about which company stock it was
+```{r, results='asis'}
+dat2DFmdf <- map_df(files, read.csv) # works, but which record goes with which stock?
+knitr::kable(dat2DFmdf[1:5,])
+
+```
+
+***
+
+..or we use **reduce** we lose the information about which company stock it was
+```{r, results='asis'}
+dat2DFr <- reduce(dat, rbind) # works, but which record goes with which stock?
+knitr::kable(dat2DFr[1:5,])
+
+```
+
+***
+
+To accomplish adding a new column with the information about which companies stock it is, we use the stocks vector we created earlier along with the **map2_df** function and **update_list**
+```{r, results='asis'}
+dat2DFm2df <- map2_df(dat2, stocks, ~update_list(.x, Stock = .y))
+knitr::kable(dat2DFm2df[1:5,])
+
+```
+
+
+
+
+
+
 
 *** 
 ###### This is a R Markdown document, more information on R Markdown https://rmarkdown.rstudio.com/lesson-1.html
