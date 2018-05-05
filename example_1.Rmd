@@ -20,6 +20,7 @@ source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_library.R')
 
 This is an example from http://data.library.virginia.edu/getting-started-with-the-purrr-package-in-r/
 
+*** 
 
 Obtaining a list of names of the files we want to load
 ```{r, echo=TRUE}
@@ -28,7 +29,7 @@ Obtaining a list of names of the files we want to load
 files <- list.files(pattern = "csv$") 
 
 ```
-
+*** 
 
 Loading csv files using lapply 
 ```{r, echo=TRUE}
@@ -37,6 +38,7 @@ dat <- lapply(files, read.csv)
 names(dat) <- gsub("\\.csv", "", files) # remove file extension
 
 ```
+*** 
 
 Loading csv files using purrr 
 ```{r, echo=TRUE}
@@ -46,6 +48,7 @@ dat2 <- map(files, read.csv)
 names(dat2) <- gsub("\\.csv", "", files)
 
 ```
+*** 
 
 Computation using lapply
 ```{r, echo=TRUE}
@@ -54,6 +57,7 @@ Computation using lapply
 lapply(dat, function(x)mean(x$Open))
 
 ```
+*** 
 
 Computation using purrr
 ```{r, echo=TRUE}
@@ -62,7 +66,7 @@ Computation using purrr
 map(dat, function(x)mean(x$Open))
 
 ```
-
+*** 
 
 purrr **map** allows us to bypass the function function. Using a tilda (~) in place of function and a dot (.) in place of x, we can do this:
 ```{r, echo=TRUE}
@@ -70,12 +74,14 @@ purrr **map** allows us to bypass the function function. Using a tilda (~) in pl
 map(dat, ~mean(.$Open))
 
 ```
+*** 
 
 Multiple types of map allow us to determine the structure of the return
 ```{r, echo=TRUE}
 map_dbl(dat, ~mean(.$Open))
 
 ```
+*** 
 
 We want to extract each stock’s Open price data. In other words, we want to go into each data frame in our list and pull out the Open column. We can do that with lapply as follows:
 ```{r, echo=TRUE}
@@ -83,12 +89,14 @@ lapply(dat, function(x)x$Open)
 
 
 ```
+*** 
 
 Using purrr **map**
 ```{r, echo=TRUE}
 map(dat, "Open")
 
 ```
+*** 
 
 We often want to plot financial data. 
 In this case we want to plot Closing price for each stock and look for trends. 
@@ -99,16 +107,30 @@ We will do this with the base R function mapply.
 
 **NOTE:** The “m” in mapply means “multiple arguments”. In this case we have two arguments: the Closing price and the stock name. Notice that mapply requires the function come first and then the arguments.
 
-```{r}
-stocks <- sub("\\.csv","", files)
-
-```
-
 
 ```{r, echo=TRUE, fig.asp=0.4}
+
+#creating a list to use
+stocks <- sub("\\.csv","", files)
+
 par(mfrow=c(1,3))
 mapply(function(x,y)plot(x$Close, type = "l", main = y), x = dat, y = stocks)
 
+```
+*** 
+
+The purrr equivalent is map2. 
+```{r, echo=TRUE, fig.asp=0.4}
+par(mfrow=c(1,3))
+map2(dat, stocks, ~plot(.x$Close, type="l", main = .y))
+
+```
+*** 
+
+If we want to not have the NULL returns from plot we can use **walk2**
+```{r, echo=TRUE, fig.asp=0.4}
+par(mfrow=c(1,3))
+walk2(dat, stocks, ~plot(.x$Close, type="l", main = .y))
 
 ```
 
