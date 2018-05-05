@@ -368,17 +368,18 @@
 # Sourcing essential files
 source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_library.R')
 source('/mnt/d/gitRepoCheckout/purrr_testing/function_random_string.R')
+source('/mnt/d/gitRepoCheckout/purrr_testing/function_list2dt.R')
 
 # Generating the lists for consumption
 print("Start of creating listA")
 start<- Sys.time()
-listA <- random_string(500)
+listA <- random_string(18000)
 print(Sys.time()-start)
 print("End of creation of listA")
 
 print("Start of creating listB")
 start<- Sys.time()
-listB <- random_string(50)
+listB <- random_string(1)
 print(Sys.time()-start)
 print("End of creation of listB")
 
@@ -406,19 +407,6 @@ print("End of traditional R for loop")
 
 #  Using functional program so that we can consume
 # this using purrr map functions
-
-# Adding a new function to be used as the 
-# very basic function
-list2dt<- function(list1,object1){
-  #Creating a list of same size as the one passed to us
-  list2<- c(rep(object1,length(list1)))
-  #Creating a  data table to be used
-  dt<- data.table(list1=list1,list2=list2)
-  
-  return(dt)
-}
-
-
 # Eliminating one for loop just based on the function
 
 print("Start of one for loop removal")
@@ -440,10 +428,23 @@ print("End of one for loop removal")
 
 # Using map from purrr
 
-print("Start of purrrp")
+print("Start of purrr")
 start<- Sys.time()
 
 listC_dt_purrr<- map(listB,~list2dt(list1 = listA, object1 =.x)) %>% rbindlist
 
 print(Sys.time()-start)
 print("End of purrr")
+
+# Using map from purrr with future - furrr!
+
+plan(multiprocess)
+
+print("Start of purrr with furrr")
+start<- Sys.time()
+
+listC_dt_furrr<- map(listB,~list2dt(list1 = listA, object1 =.x)) %>% rbindlist
+
+print(Sys.time()-start)
+print("End of furrr")
+
