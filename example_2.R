@@ -370,8 +370,17 @@ source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_library.R')
 source('/mnt/d/gitRepoCheckout/purrr_testing/function_random_string.R')
 
 # Generating the lists for consumption
-listA <- random_string(10000000)
-listB <- random_string(10000000)
+print("Start of creating listA")
+start<- Sys.time()
+listA <- random_string(500)
+print(Sys.time()-start)
+print("End of creation of listA")
+
+print("Start of creating listB")
+start<- Sys.time()
+listB <- random_string(50)
+print(Sys.time()-start)
+print("End of creation of listB")
 
 
 # Using traditional R we will be generating
