@@ -177,7 +177,10 @@ $(document).ready(function () {
 <hr />
 <p>Obtaining a list of names of the files we want to load</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get all files ending in csv</span>
-files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">pattern =</span> <span class="st">&quot;csv$&quot;</span>) </code></pre></div>
+files &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="dt">path =</span> wd,<span class="dt">pattern =</span> <span class="st">&quot;csv$&quot;</span>,<span class="dt">include.dirs =</span> <span class="ot">TRUE</span>) 
+
+files</code></pre></div>
+<pre><code>## [1] &quot;BA.csv&quot;  &quot;IBM.csv&quot; &quot;JNJ.csv&quot;</code></pre>
 <hr />
 <p>Loading csv files using lapply</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># read in data normally</span>

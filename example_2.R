@@ -366,9 +366,12 @@
 
 
 # Sourcing essential files
-source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_library.R')
-source('/mnt/d/gitRepoCheckout/purrr_testing/function_random_string.R')
-source('/mnt/d/gitRepoCheckout/purrr_testing/function_list2dt.R')
+# Obtain working directory
+wd<- getwd()
+
+source(paste0(wd,'/dependencies_library.R'))
+source(paste0(wd,'/function_random_string.R'))
+source(paste0(wd,'/function_list2dt.R'))
 
 # Generating the lists for consumption
 print("Start of creating listA")

@@ -12,9 +12,10 @@ output:
 
 ```{r setup, include=FALSE, echo=TRUE}
 #sourcing dependencies
-source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_library.R')
-#source('/mnt/d/gitRepoCheckout/purrr_testing/dependencies_download_unzip.R')
+# Obtain working directory
+wd<- getwd()
 
+source(paste0(wd,'/dependencies_library.R'))
 ```
 ## Using apply family vs purrr
 
@@ -26,8 +27,9 @@ Obtaining a list of names of the files we want to load
 ```{r}
 
 # get all files ending in csv
-files <- list.files(pattern = "csv$") 
+files <- list.files(path = wd,pattern = "csv$") 
 
+files
 ```
 *** 
 
